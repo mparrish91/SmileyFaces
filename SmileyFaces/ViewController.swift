@@ -18,7 +18,8 @@ class ViewController: UIViewController {
     var trayOpen = true
 
     @IBOutlet weak var downArrowImage: UIImageView!
-    
+    var newlyCreatedFace: UIImageView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         trayCenterWhenOpen = trayView.center
@@ -102,25 +103,25 @@ class ViewController: UIViewController {
         
         if sender.state == .began {
             print("Gesture began at: \(point)")
-            face = createNewImage(sender: sender)
-
+           createNewImage(sender: sender)
+            
         } else if sender.state == .changed {
             print("Gesture changed at: \(point)")
-            face.center = point
-
+            newlyCreatedFace.center = point
+            print(newlyCreatedFace.center)
         } else if sender.state == .ended {
             print("Gesture ended at: \(point)")
         }
     }
 
     
-    func createNewImage(sender: UIPanGestureRecognizer) -> UIImageView
+    func createNewImage(sender: UIPanGestureRecognizer)
     {
         // Gesture recognizers know the view they are attached to
         let imageView = sender.view as! UIImageView
         
         // Create a new image view that has the same image as the one currently panning
-        let newlyCreatedFace = UIImageView(image: imageView.image)
+        self.newlyCreatedFace = UIImageView(image: imageView.image)
         
         // Add the new face to the tray's parent view.
         view.addSubview(newlyCreatedFace)
@@ -132,7 +133,7 @@ class ViewController: UIViewController {
         // main view, you have to offset the coordinates
         newlyCreatedFace.center.y += trayView.frame.origin.y
         
-        return newlyCreatedFace
+        
     }
     
 }
