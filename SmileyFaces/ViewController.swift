@@ -67,7 +67,6 @@ class ViewController: UIViewController {
             trayOriginalCenter = trayView.center
         } else if sender.state == .changed {
             print("Gesture changed at: \(point)")
-            //trayView.center = CGPoint(x: trayOriginalCenter.x, y: trayOriginalCenter.y + translation.y)
             
             if sender.velocity(in: parentView).y < 0
             {
@@ -94,6 +93,47 @@ class ViewController: UIViewController {
     }
 
 
+    @IBAction func onFacePanGesture(_ sender: UIPanGestureRecognizer) {
+        
+        let parentView = self.view
+        let point = sender.location(in: parentView)
+        let translation = sender.translation(in: parentView)
+        var face = UIImageView()
+        
+        if sender.state == .began {
+            print("Gesture began at: \(point)")
+            face = createNewImage(sender: sender)
+
+        } else if sender.state == .changed {
+            print("Gesture changed at: \(point)")
+            face.center = point
+
+        } else if sender.state == .ended {
+            print("Gesture ended at: \(point)")
+        }
+    }
+
+    
+    func createNewImage(sender: UIPanGestureRecognizer) -> UIImageView
+    {
+        // Gesture recognizers know the view they are attached to
+        let imageView = sender.view as! UIImageView
+        
+        // Create a new image view that has the same image as the one currently panning
+        let newlyCreatedFace = UIImageView(image: imageView.image)
+        
+        // Add the new face to the tray's parent view.
+        view.addSubview(newlyCreatedFace)
+        
+        // Initialize the position of the new face.
+        newlyCreatedFace.center = imageView.center
+        
+        // Since the original face is in the tray, but the new face is in the
+        // main view, you have to offset the coordinates
+        newlyCreatedFace.center.y += trayView.frame.origin.y
+        
+        return newlyCreatedFace
+    }
     
 }
 
