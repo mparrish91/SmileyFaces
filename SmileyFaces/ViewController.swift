@@ -67,7 +67,7 @@ class ViewController: UIViewController {
             trayOriginalCenter = trayView.center
         } else if sender.state == .changed {
             print("Gesture changed at: \(point)")
-            trayView.center = CGPoint(x: trayOriginalCenter.x, y: trayOriginalCenter.y + translation.y)
+            //trayView.center = CGPoint(x: trayOriginalCenter.x, y: trayOriginalCenter.y + translation.y)
             
             if sender.velocity(in: parentView).y < 0
             {
