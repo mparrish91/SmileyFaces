@@ -25,16 +25,18 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
         trayCenterWhenOpen = trayView.center
         trayCenterWhenClosed = CGPoint(x: 187.5, y: 720.0)
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector(("imageTapped")))
+        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector(("onTrayArrowTapped")))
         downArrowImage.addGestureRecognizer(tapGestureRecognizer)
     }
     
-    func imageTapped()
+    func onTrayArrowTapped()
     {
         if trayOpen {
             UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1.0, options: UIViewAnimationOptions.beginFromCurrentState, animations: {
                 self.trayView.center = self.trayCenterWhenClosed
                 
+                self.downArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(180 * M_PI / 180))
+
                 }, completion: { (finished) in
                     
             })
@@ -44,6 +46,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
         {
             UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.3, options: UIViewAnimationOptions.curveEaseIn, animations: {
                 self.trayView.center = self.trayCenterWhenOpen
+                
+                self.downArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(1 * M_PI / 180))
+
                 
                 }, completion: { (finished) in
                     
@@ -136,6 +141,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
         newlyCreatedFace.center.y += trayView.frame.origin.y
         createPanGestureRecognizer(targetView: imageView)
         createPinGestureRecognizer(targetView: imageView)
+        createRotGestureRecognizer(targetView: imageView)
 
         
     }
@@ -160,7 +166,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
     {
         
         let rotGesture = UIRotationGestureRecognizer(target: self, action: #selector(ViewController.handlePinFaceGesture(_:)))
-        rotGesture.delegate = self;
         targetView.addGestureRecognizer(rotGesture)
     }
     
