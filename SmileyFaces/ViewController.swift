@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIGestureRecognizerDelegate{
 
     @IBOutlet weak var trayView: UIView!
     var trayOriginalCenter: CGPoint!
@@ -98,8 +98,6 @@ class ViewController: UIViewController {
         
         let parentView = self.view
         let point = sender.location(in: parentView)
-        let translation = sender.translation(in: parentView)
-        var face = UIImageView()
         
         if sender.state == .began {
             print("Gesture began at: \(point)")
@@ -108,9 +106,11 @@ class ViewController: UIViewController {
         } else if sender.state == .changed {
             print("Gesture changed at: \(point)")
             newlyCreatedFace.center = point
-            print(newlyCreatedFace.center)
+//            print(newlyCreatedFace.center)
         } else if sender.state == .ended {
             print("Gesture ended at: \(point)")
+//            createPinGestureRecognizer(targetView: newlyCreatedFace)
+
         }
     }
 
@@ -122,18 +122,95 @@ class ViewController: UIViewController {
         
         // Create a new image view that has the same image as the one currently panning
         self.newlyCreatedFace = UIImageView(image: imageView.image)
-        
+        self.newlyCreatedFace.isUserInteractionEnabled = true
+
         // Add the new face to the tray's parent view.
         view.addSubview(newlyCreatedFace)
         
+
         // Initialize the position of the new face.
         newlyCreatedFace.center = imageView.center
         
         // Since the original face is in the tray, but the new face is in the
         // main view, you have to offset the coordinates
         newlyCreatedFace.center.y += trayView.frame.origin.y
+        createPanGestureRecognizer(targetView: imageView)
+        createPinGestureRecognizer(targetView: imageView)
+
         
+    }
+    
+    func createPanGestureRecognizer(targetView: UIImageView)
+    {
         
+        let panGesture = UIPanGestureRecognizer(target: self, action:(#selector(ViewController.handlePanningFaceGesture(_:))))
+        targetView.addGestureRecognizer(panGesture)
+    }
+    
+    func createPinGestureRecognizer(targetView: UIImageView)
+    {
+        
+        let pinGesture = UIPinchGestureRecognizer(target: self, action: #selector(ViewController.handlePinFaceGesture(_:)))
+        pinGesture.delegate = self;
+
+        targetView.addGestureRecognizer(pinGesture)
+    }
+    
+    func createRotGestureRecognizer(targetView: UIImageView)
+    {
+        
+        let rotGesture = UIRotationGestureRecognizer(target: self, action: #selector(ViewController.handlePinFaceGesture(_:)))
+        rotGesture.delegate = self;
+        targetView.addGestureRecognizer(rotGesture)
+    }
+    
+    
+    func handlePinFaceGesture(_ sender: UIPanGestureRecognizer) {
+        let parentView = self.view
+        let point = sender.location(in: parentView)
+        let translation = sender.translation(in: parentView)
+        
+        if sender.state == .began {
+            print("Gesture began at: \(point)")
+            
+        } else if sender.state == .changed {
+            print("Gesture changed at: \(point)")
+            newlyCreatedFace.center = point
+            newlyCreatedFace.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        } else if sender.state == .ended {
+            print("Gesture ended at: \(point)")
+            newlyCreatedFace.transform = CGAffineTransform(scaleX: 1, y: 1)
+            
+            
+        }
+    }
+
+
+    
+    func handlePanningFaceGesture(_ sender: UIPanGestureRecognizer) {
+        
+        let parentView = self.view
+        let point = sender.location(in: parentView)
+        let translation = sender.translation(in: parentView)
+        
+        if sender.state == .began {
+            print("Gesture began at: \(point)")
+            
+        } else if sender.state == .changed {
+            print("Gesture changed at: \(point)")
+            newlyCreatedFace.center = point
+            newlyCreatedFace.transform = CGAffineTransform(scaleX: 2, y: 2)
+        } else if sender.state == .ended {
+            print("Gesture ended at: \(point)")
+            newlyCreatedFace.transform = CGAffineTransform(scaleX: 1, y: 1)
+
+            
+        }
+    }
+    
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
     }
     
 }

@@ -96,6 +96,7 @@
 				TargetAttributes = {
 					422E76B31DCB085C00A053FB = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = QF43K5VRQT;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -260,6 +261,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = QF43K5VRQT;
 				INFOPLIST_FILE = SmileyFaces/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = CodePath.SmileyFaces;
@@ -272,6 +274,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = QF43K5VRQT;
 				INFOPLIST_FILE = SmileyFaces/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = CodePath.SmileyFaces;
@@ -299,6 +302,7 @@
 				422E76C81DCB085C00A053FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
