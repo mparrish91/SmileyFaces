@@ -83,6 +83,11 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
                     self.trayView.center = self.trayCenterWhenOpen
 
                     self.downArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(1 * M_PI / 180))
+                    
+                    //if point > trayCenterWhenOepn
+                    //begin fricitonful drag
+                    //(    newlyCreatedFace.center = (point/10)
+
 
                     
                     }, completion: { (finished) in
@@ -117,19 +122,19 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
         if sender.state == .began {
             print("Gesture began at: \(point)")
            createNewImage(sender: sender)
-            
+            imageOriginalCenter = newlyCreatedFace.center
+
         } else if sender.state == .changed {
             print("Gesture changed at: \(point)")
             newlyCreatedFace.center = point
-//            print(newlyCreatedFace.center)
-            
+
             
         } else if sender.state == .ended {
             print("Gesture ended at: \(point)")
             //if location in view is in the trayview
             //animate back to
             
-            if newlyCreatedFace.isDescendant(of: trayView)
+            if trayView.frame.contains(newlyCreatedFace.frame)
             {
                 UIView.animate(withDuration: 0.8, animations: {
                     self.newlyCreatedFace.center = self.imageOriginalCenter
