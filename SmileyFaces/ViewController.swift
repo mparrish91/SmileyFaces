@@ -16,6 +16,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
     var trayCenterWhenClosed: CGPoint!
 
     var trayOpen = true
+    
+    var imageOriginalCenter: CGPoint!
+
 
     @IBOutlet weak var downArrowImage: UIImageView!
     var newlyCreatedFace: UIImageView!
@@ -79,6 +82,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
                 UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.3, options: UIViewAnimationOptions.curveEaseIn, animations: {
                     self.trayView.center = self.trayCenterWhenOpen
 
+                    self.downArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(1 * M_PI / 180))
+
+                    
                     }, completion: { (finished) in
                         
                 })
@@ -87,6 +93,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
             {
                 UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1.0, options: UIViewAnimationOptions.beginFromCurrentState, animations: {
                     self.trayView.center = self.trayCenterWhenClosed
+                    
+                    self.downArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(180 * M_PI / 180))
+
+
                     
                     }, completion: { (finished) in
                         
@@ -112,10 +122,23 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
             print("Gesture changed at: \(point)")
             newlyCreatedFace.center = point
 //            print(newlyCreatedFace.center)
+            
+            
         } else if sender.state == .ended {
             print("Gesture ended at: \(point)")
-//            createPinGestureRecognizer(targetView: newlyCreatedFace)
-
+            //if location in view is in the trayview
+            //animate back to
+            
+            if newlyCreatedFace.isDescendant(of: trayView)
+            {
+                UIView.animate(withDuration: 0.8, animations: {
+                    self.newlyCreatedFace.center = self.imageOriginalCenter
+                    
+                })
+            }
+            
+        
+            
         }
     }
 
@@ -132,7 +155,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
         // Add the new face to the tray's parent view.
         view.addSubview(newlyCreatedFace)
         
-
+        imageOriginalCenter = imageView.center
         // Initialize the position of the new face.
         newlyCreatedFace.center = imageView.center
         
@@ -142,6 +165,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
         createPanGestureRecognizer(targetView: imageView)
         createPinGestureRecognizer(targetView: imageView)
         createRotGestureRecognizer(targetView: imageView)
+        createDoubleTapGestureRecognizer(targetView: imageView)
 
         
     }
@@ -167,6 +191,18 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate{
         
         let rotGesture = UIRotationGestureRecognizer(target: self, action: #selector(ViewController.handlePinFaceGesture(_:)))
         targetView.addGestureRecognizer(rotGesture)
+    }
+    
+    func createDoubleTapGestureRecognizer(targetView: UIImageView)
+    {
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
+        tap.numberOfTapsRequired = 2
+        view.addGestureRecognizer(tap)
+    }
+    
+    func doubleTapped() {
+        newlyCreatedFace.removeFromSuperview()
     }
     
     
